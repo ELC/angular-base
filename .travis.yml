@@ -1,44 +1,46 @@
 sudo: required
 
 language: node_js
-node_js:
-  - "6"
-  - "8"
-  - "9"
-  - "node"
-
-addons:
-  chrome: stable
-
-cache:
-  directories:
-    - node_modules
 
 branches:
   only:
     - master
     - develop
 
-script:
-  - npm run test-headless
-  - npm run build-gh
-  - npm run build
-
-after_success:
-  - npm run deploy-firebase
-  - npm run deploy-netlify
-
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GH_TOKEN
-  local-dir: dist-gh
-  on:
-    branch:
-      - master
-      - develop
-
-notifications:
-  email:
-    on_failure: change
-    on_success: change
+jobs:
+  include:
+    - stage: Test
+      node_js:
+        - "6"
+        - "8"
+        - "9"
+        - "node"
+      addons:
+        chrome: stable
+      cache:
+        directories:
+          - node_modules
+      script: npm run test-headless
+    - stage: Build
+      node_js:
+          - "node"
+      script:
+        - npm run build-gh
+        - npm run build
+    - stage: Deploy to production
+      node_js:
+        - "node"
+      install:
+        - npm install
+      script:
+        - npm run deploy-firebase
+        - npm run deploy-netlify
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: $GH_TOKEN
+        local-dir: dist-gh
+        on:
+          branch:
+            - master
+            - develop
