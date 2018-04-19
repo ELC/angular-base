@@ -32,11 +32,15 @@ jobs:
       script: npm run test-headless
     - stage: Build
       install: true
+      env:
+        - name=Github Pages
       script:
         - npm run build-gh
         - cd dist-gh
         - ../publish.sh build-gh
-    - install: true
+    - env:
+        - name=Firebase & Netlify
+      install: true
       script:
         - npm run build
         - cd dist
@@ -44,7 +48,7 @@ jobs:
     - stage: Deploy
       install: true
       env:
-        - name="Github Pages"
+        - name=Github Pages
       script:
         - git clone -b build-gh https://github.com/ELC/hello-angular.git
         - mv hello-angular dist-gh
@@ -58,7 +62,7 @@ jobs:
             - master
             - develop
     - env:
-        - name="Firebase & Netlify"
+        - name=Firebase & Netlify
       install:
         - npm install firebase-tools netlify-cli
       script:
