@@ -14,10 +14,11 @@ before_script:
 
 script:
   - ng build --prod
+  - ng build --prod --output-path dist-gh --base-href "https://elc.github.io/hello-angular/"
 
 after_success:
   - firebase deploy --token $FIREBASE_TOKEN
-  - angular-cli-ghpages --repo=https://GH_TOKEN@github.com/ELC/hello-angular.git --message="Update Website"
+  - angular-cli-ghpages --dir dist-gh --repo=https://GH_TOKEN@github.com/ELC/hello-angular.git --message="Update Website"
 
 notifications:
   email:
