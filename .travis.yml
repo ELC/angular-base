@@ -31,20 +31,10 @@ jobs:
         chrome: stable
       script: npm run test-headless
     - stage: Build
-      install: true
-      env:
-        - name=Github Pages
       script:
         - npm run build-gh
         - cd dist-gh
         - ../publish.sh build-gh
-    - env:
-        - name=Firebase & Netlify
-      install: true
-      script:
-        - npm run build
-        - cd dist
-        - ../publish.sh build-firebase
     - stage: Deploy
       install: true
       env:
@@ -66,8 +56,9 @@ jobs:
       install:
         - npm install firebase-tools netlify-cli
       script:
-        - git clone -b build-firebase https://github.com/ELC/hello-angular.git
+        - git clone -b build-gh https://github.com/ELC/hello-angular.git
         - mv hello-angular dist
+        - sed -i -e 's/https:\/\/elc.github.io\/hello-angular\///g' dist/index.html
       after_success:
         - npm run firebase deploy --token $FIREBASE_TOKEN
         - npm run netlify deploy -t $NETLIFY_TOKEN -p dist -s xenodochial-davinci-fc66ee
