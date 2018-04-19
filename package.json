@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build-gh": "ng build --prod --output-path dist-gh --base-href \"https://elc.github.io/hello-angular/\"",
+    "build-gh": "ng build --prod --output-path dist_gh --base-href \"https://elc.github.io/hello-angular/\"",
     "deploy-firebase": "firebase deploy --token $FIREBASE_TOKEN",
     "deploy-netlify": "netlify deploy -t $NETLIFY_TOKEN -p dist -s xenodochial-davinci-fc66ee",
     "ng": "ng",
