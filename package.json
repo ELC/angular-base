@@ -4,7 +4,6 @@
   "license": "MIT",
   "scripts": {
     "build-gh": "ng build --prod --output-path dist-gh --base-href \"https://elc.github.io/hello-angular/\"",
-    "deploy-gh": "angular-cli-ghpages --dir dist-gh --repo=https://GH_TOKEN@github.com/ELC/hello-angular.git --message=\"Update Website\"",
     "deploy-firebase": "firebase deploy --token $FIREBASE_TOKEN",
     "deploy-netlify": "netlify deploy -t $NETLIFY_TOKEN -p dist -s xenodochial-davinci-fc66ee",
     "ng": "ng",
