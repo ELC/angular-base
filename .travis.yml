@@ -32,6 +32,7 @@ jobs:
         - cd dist-gh
         - ../publish.sh build-gh
     - stage: Deploy
+      if: branch = master
       install: true
       env:
         - name=Github Pages
@@ -43,10 +44,6 @@ jobs:
         skip-cleanup: true
         github-token: $GH_TOKEN
         local-dir: dist-gh
-        on:
-          branch:
-            - master
-            - develop
     - env:
         - name=Firebase & Netlify
       install:
