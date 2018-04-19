@@ -9,7 +9,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --prod",
-    "test-headless": "ng test --browser ChromeHeadless --single-run",
+    "test-headless": "ng test && ng e2e",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
