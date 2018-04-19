@@ -23,10 +23,6 @@ jobs:
       addons:
         chrome: stable
       script: npm run test-headless
-    - node_js: "9"
-      addons:
-        chrome: stable
-      script: npm run test-headless
     - addons:
         chrome: stable
       script: npm run test-headless
