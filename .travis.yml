@@ -1,33 +1,69 @@
 sudo: required
 
 language: node_js
-node_js:
-  - "6.14"
-  - "8.11"
-  - "9.11"
-addons:
-  chrome: stable
+node_js: "node"
+
+branches:
+  only:
+    - master
+    - develop
 
 cache:
   directories:
     - node_modules
 
-branches:
-  only:
-    - master
-    - test-cache
-
-script:
-  - npm run test-headless
-  - npm run build-gh
-  - npm run build
-
-after_success:
-  - npm run deploy-firebase
-  - npm run deploy-gh
-  - npm run deploy-netlify
-
-notifications:
-  email:
-    on_failure: change
-    on_success: change
+jobs:
+  include:
+    - stage: Test
+      node_js: "6"
+      addons:
+        chrome: stable
+      script: npm run test-headless
+    - node_js: "8"
+      addons:
+        chrome: stable
+      script: npm run test-headless
+    - node_js: "9"
+      addons:
+        chrome: stable
+      script: npm run test-headless
+    - addons:
+        chrome: stable
+      script: npm run test-headless
+    - stage: Build
+      install: true
+      script:
+        - npm run build-gh
+        - cd dist-gh
+        - ../publish.sh build-gh
+    - install: true
+      script:
+        - npm run build
+        - cd dist
+        - ../publish.sh build-firebase
+    - stage: Deploy
+      install: true
+      env:
+        - name="Github Pages"
+      script:
+        - git clone -b build-gh https://github.com/ELC/hello-angular.git
+        - mv hello-angular dist-gh
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: $GH_TOKEN
+        local-dir: dist-gh
+        on:
+          branch:
+            - master
+            - develop
+    - env:
+        - name="Firebase & Netlify"
+      install:
+        - npm install firebase-tools netlify-cli
+      script:
+        - git clone -b build-firebase https://github.com/ELC/hello-angular.git
+        - mv hello-angular dist
+      after_success:
+        - npm run firebase deploy --token $FIREBASE_TOKEN
+        - npm run netlify deploy -t $NETLIFY_TOKEN -p dist -s xenodochial-davinci-fc66ee
