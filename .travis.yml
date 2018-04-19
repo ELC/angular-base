@@ -12,24 +12,42 @@ cache:
   directories:
     - node_modules
 
-addons:
-  chrome: stable
-
 jobs:
   include:
     - stage: Test
       node_js: "6"
+      addons:
+        chrome: stable
       script: npm run test-headless
     - node_js: "8"
+      addons:
+        chrome: stable
       script: npm run test-headless
     - node_js: "9"
+      addons:
+        chrome: stable
       script: npm run test-headless
-    - script: npm run test-headless
+    - addons:
+        chrome: stable
+      script: npm run test-headless
+    - stage: Build
+      install: true
+      script:
+        - npm run build-gh
+        - cd dist-gh
+        - ./publish.sh build-gh
+    - install: true
+      script:
+        - npm run build
+        - cd dist
+        - ./publish.sh build-firebase
     - stage: Deploy
+      language: bash
       env:
         - name="Github Pages"
       script:
-        - npm run build-gh
+        - git clone -b build-gh https://github.com/ELC/hello-angular.git
+        - mv hello-angular dist-gh
       deploy:
         provider: pages
         skip-cleanup: true
@@ -41,8 +59,11 @@ jobs:
             - develop
     - env:
         - name="Firebase & Netlify"
+      install:
+        - npm install firebase-tools netlify-cli
       script:
-        - npm run build
+        - git clone -b build-firebase https://github.com/ELC/hello-angular.git
+        - mv hello-angular dist
       after_success:
-        - npm run deploy-firebase
-        - npm run deploy-netlify
+        - npm run firebase deploy --token $FIREBASE_TOKEN
+        - npm run netlify deploy -t $NETLIFY_TOKEN -p dist -s xenodochial-davinci-fc66ee
