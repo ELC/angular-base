@@ -1,8 +1,12 @@
+sudo: required
+
 language: node_js
 node_js:
   - "6.14"
   - "8.11"
   - "9.11"
+addons:
+  chrome: stable
 
 cache:
   directories:
