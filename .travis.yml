@@ -42,7 +42,6 @@ jobs:
         - cd dist
         - ../publish.sh build-firebase
     - stage: Deploy
-      cache: true
       install: true
       env:
         - name="Github Pages"
