@@ -35,14 +35,14 @@ jobs:
       script:
         - npm run build-gh
         - cd dist-gh
-        - ./publish.sh build-gh
+        - ../publish.sh build-gh
     - install: true
       script:
         - npm run build
         - cd dist
-        - ./publish.sh build-firebase
+        - ../publish.sh build-firebase
     - stage: Deploy
-      language: bash
+      install: true
       env:
         - name="Github Pages"
       script:
