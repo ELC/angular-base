@@ -11,16 +11,18 @@ branches:
 cache:
   directories:
     - node_modules
-    - dist_gh
 
 stages:
   - name: test
   - name: build
-    if: branch = master OR branch = develop
   - name: deploy-test
     if: branch = develop
   - name: deploy
     if: branch = master
+
+install:
+  - npm set progress=false
+  - npm install
 
 jobs:
   include:
@@ -38,31 +40,35 @@ jobs:
       script: npm run test-headless
     - stage: build
       script:
-        - npm run build-gh
+        - npm run build
     - stage: deploy-test
       env:
         - name=Netlify Testing
       install:
-        - npm install -g firebase-tools netlify-cli
+        - npm set progress=false
+        - npm install -g netlify-cli
       script:
-        - mv dist_gh dist
-        - sed -i -e 's/https:\/\/elc.github.io\/hello-angular\///g' dist/index.html
-        - netlify deploy -t $NETLIFY_TOKEN -p dist -s focused-dubinsky-dee263
+        - npm run clone
+        - npm run clean
+        - npm run deploy-netlify-test
     - stage: deploy
       install: true
       env:
         - name=Github Pages
+      script:
+        - npm run clone
       deploy:
         provider: pages
         skip-cleanup: true
         github-token: $GH_TOKEN
-        local-dir: dist_gh
+        local-dir: dist
     - env:
         - name=Firebase & Netlify
       install:
+        - npm set progress=false
         - npm install -g firebase-tools netlify-cli
       script:
-        - mv dist_gh dist
-        - sed -i -e 's/https:\/\/elc.github.io\/hello-angular\///g' dist/index.html
-        - firebase deploy --token $FIREBASE_TOKEN
-        - netlify deploy -t $NETLIFY_TOKEN -p dist -s xenodochial-davinci-fc66ee
+        - npm run clone
+        - npm run clean
+        - npm run deploy-firebase
+        - npm run deploy-netlify-production
