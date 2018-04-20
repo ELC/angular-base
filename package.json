@@ -8,7 +8,7 @@
     "deploy-netlify-production": "netlify deploy -t $NETLIFY_TOKEN -p dist -s $NETLIFY_PRODUCTION_APP",
     "deploy-netlify-test": "netlify deploy -t $NETLIFY_TOKEN -p dist -s $NETLIFY_TEST_APP",
     "clone": "git clone -b build https://github.com/ELC/hello-angular.git dist",
-    "clean": "sed -i -e 's/https:\/\/elc.github.io\/hello-angular\///g' dist/index.html",
+    "clean": "sed -i -e 's/https:\\/\\/elc.github.io\\/hello-angular\\///g' dist/index.html",
     "ng": "ng",
     "start": "ng serve",
     "test-headless": "ng test && ng e2e",
