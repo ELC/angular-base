@@ -63,12 +63,20 @@ jobs:
         github-token: $GH_TOKEN
         local-dir: dist
     - env:
-        - name=Firebase & Netlify
+        - name=Firebase
       install:
         - npm set progress=false
-        - npm install -g firebase-tools netlify-cli
+        - npm install -g firebase-tools
       script:
         - npm run clone
         - npm run clean
         - npm run deploy-firebase
+    - env:
+        - name=Netlify Production
+      install:
+        - npm set progress=false
+        - npm install -g netlify-cli
+      script:
+        - npm run clone
+        - npm run clean
         - npm run deploy-netlify-production
