@@ -1,7 +1,7 @@
 sudo: required
 
 language: node_js
-node_js: "node"
+node_js: "8"
 
 branches:
   only:
@@ -31,15 +31,12 @@ jobs:
       addons:
         chrome: stable
       script: npm run test-headless
-    - node_js: "8"
-      addons:
-        chrome: stable
-      script: npm run test-headless
     - addons:
         chrome: stable
       script: npm run test-headless
     - stage: build
       script:
+        - npm run download-template
         - npm run build
     - stage: deploy-test
       env:
